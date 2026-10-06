@@ -1,3 +1,11 @@
+/*
+********************
+Last names: Balbanero, Sandoval, Racimo, Yu
+Language: Java
+Paradigm(s): Object-Oriented Programming
+********************
+*/
+
 import java.util.*;
 
 class Account{
