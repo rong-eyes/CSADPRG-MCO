@@ -1,6 +1,6 @@
 /*
 ********************
-Last names: Balbanero, Natividad, Racimo, Yu
+Last names: Balbanero, Sandoval, Racimo, Yu
 Language: Kotlin
 Paradigm(s): Procedural
 ********************
