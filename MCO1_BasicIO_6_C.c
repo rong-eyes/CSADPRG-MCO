@@ -1,5 +1,5 @@
 /*
-Last Names: Balbanero, Natividad, Racimo, Yu
+Last Names: Balbanero, Sandoval, Racimo, Yu
 Language: C
 Paradigm: Procedural
 */
