@@ -10,29 +10,35 @@ Paradigm(s): Procedural
 
 //FUNCTIONS 
 fun registerAccountName() {
-    println("Register Account Name\nAccount Name: ")
+    println("Register Account Name\n")
+    print("Account Name: ")
     var accountName = readln()
     println("\n***\nAccount Name = $accountName\n")
 }
 
 fun depositAmount() {
-    println("Deposit Amount\nAccount Name:")
+    println("Deposit Amount\n")
+    print("Account Name: ")
     var accountName = readln()
-    println("Current Balance: 1000.00\nCurrency: PHP\nDeposit Amount: ")            //hard-coded for milestone 1
+    println("Current Balance: 1000.00\nCurrency: PHP\n")    //hard-coded for milestone 1
+    print("Deposit Amount: ")            
     var depositAmount: Double = readln().toDouble()
     println("\n***\nAccount Name = $accountName\nDeposit Amount = $depositAmount\n")
 }
 
 fun withdrawAmount() {
-    println("Withdraw Amount\nAccount Name: ")
+    println("Withdraw Amount\n")
+    print("Account Name: ")
     var accountName = readln()
-    println("Current Balance: 1000.00\nCurrency: PHP\nWithdraw Amount: ")           //hard-coded for milestone 1
+    println("Current Balance: 1000.00\nCurrency: PHP\n")    //hard-coded for milestone 1
+    print("Withdraw Amount: ")           
     var withdrawAmount: Double = readln().toDouble()
     println("\n***\nAccount Name = $accountName\nWithdraw Amount = $withdrawAmount\n")
 }
 
 fun currencyExchange(){                                   //current exchange rates are hardcoded & 
-    println("Foreign Currency Exchange\nSource Amount (PHP): \n")
+    println("Foreign Currency Exchange\n")
+    print("Source Amount (PHP): ")
     var accountBalance = readln().toDouble()                                
     println("\nExchanged Currency")
     println("[1] Philippine Peso (PHP) = " + accountBalance)
@@ -53,7 +59,7 @@ fun recordExchangeRate(){
     println("[5] Euro (EUR)")
     println("[6] Chinese Yuan Renminni (CNY)\n")
 
-    println("Select Foreign Currency:")
+    print("Select Foreign Currency: ")
     var choice = readln().toInt()
     println("Exchange Rate: ")
     var exchangeRate = readln().toDouble()
