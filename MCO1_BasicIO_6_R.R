@@ -103,29 +103,29 @@ writeLines(mainmenu))
 option <- readline("Choice: ")
 option <- as.integer(option)
 
-if(option == 1){
+if(option == 1) {
     cat("***\nSelected Choice =", option,"\n***\n")
     Name <- registerName()
     accountInfo[2] <- paste("Account Name =", Name)
-    option <- readline("Choice: ")
-    
-    if (option == 2) {
-        cat("***\nSelected Choice =", option,"\n***\n")
-        balance <- deposit(accountInfo)
-    
-    } else if (option == 3) {
-        cat("***\nSelected Choice =", option,"\n***\n")
-        balance <- withdraw(accountInfo)
 
-    }
-  } else if(option != 4 && option != 5)
-    print("!    Register Name    !")
+} else if(option == 2) {
+    cat("***\nSelected Choice =", option,"\n***\n")
+    opt2Name <- registerName()
+    accountInfo[2] <- paste("Account Name =", opt2Name)
+    balance <- deposit(accountInfo)
+    
+} else if(option == 3) {
+    cat("***\nSelected Choice =", option,"\n***\n")
+    opt3Name <- registerName()
+    accountInfo[2] <- paste("Account Name =", opt3Name)
+    balance <- withdraw(accountInfo)
 
-if (option == 4) {
+} else if(option == 4) {
     cat("***\nSelected Choice =", option,"\n***\n")
     currencyExchange(rates, rateValues)
   
-} else if (option == 5) {
+} else if(option == 5) {
     cat("***\nSelected Choice =", option,"\n***\n")
     recordExchange(rates,rateValues)
+    
 }  
