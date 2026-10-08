@@ -5,7 +5,6 @@ Language: Java
 Paradigm(s): Object-Oriented Programming
 ********************
 */
-
 import java.util.*;
 
 class Account{
@@ -57,6 +56,8 @@ class Exchange{
     }
 }
 
+/* V2 (overhaul): changed behaviour to have the options run one after the other (removed switch case)*/
+
 public class MCO1_BasicIO_6_Java{
     public static void main(String[] args){
 
@@ -85,103 +86,84 @@ public class MCO1_BasicIO_6_Java{
         sc.nextLine();
         System.out.println("*** \nChoice: " + choice + "\n");
 
-        switch(choice){
-            case 1:
-                System.out.println("Register Account Name");
-                System.out.print("Account Name: ");
-                    
-                account.name = sc.nextLine().trim();
+        /* register */
 
-                System.out.println("***");
-                System.out.println("Account Name: " + account.name + "\n");
+        System.out.println("Register Account Name");
+        System.out.print("Account Name: ");
+            
+        account.name = sc.nextLine().trim();
 
-                break;
+        System.out.println("***");
+        System.out.println("Account Name: " + account.name + "\n");
 
-            case 2:
-                System.out.println("Deposit Amount");
-                System.out.print("Account Name: ");
-                depositor = sc.nextLine().trim();
+        /* deposit */
 
-                System.out.println("Balance: " + account.balance);
-                System.out.println("Currency: " + account.currency);
+        System.out.println("Deposit Amount");
+        System.out.print("Account Name: ");
+        depositor = sc.nextLine().trim();
 
-                System.out.print("Deposit Amount: ");
-                depositAmt = sc.nextDouble();
-                sc.nextLine();
+        System.out.println("Balance: " + account.balance);
+        System.out.println("Currency: " + account.currency);
 
-                account.balance += depositAmt;
+        System.out.print("Deposit Amount: ");
+        depositAmt = sc.nextDouble();
+        sc.nextLine();
 
-                System.out.println("\n***");
-                System.out.println("Account Name: " + depositor);
-                System.out.println("Deposit Amount: " + depositAmt);
-                System.out.println("Balance: " + account.balance);
-                
-                break;
+        account.balance += depositAmt;
 
-            case 3:
-                System.out.println("Withdraw Amount");
-                System.out.print("Account Name: ");
-                withdrawer = sc.nextLine().trim();
-               
-                System.out.println("Balance: " + account.balance);
-                System.out.println("Currency: " + account.currency);
-
-                System.out.print("Withdraw Amount: ");
-                withdrawAmt = sc.nextDouble();
-                sc.nextLine();
-                account.balance -= withdrawAmt;
-
-                System.out.println("\n***");
-                System.out.println("Account Name: " + withdrawer);
-                System.out.println("Withdraw Amount: " + withdrawAmt);
-                System.out.println("Balance: " + account.balance);
-                
-                break;
-
-            case 4:
-                System.out.println("Foreign Currency Exchange");
-
-                System.out.print("Source Amount: ");
-                exchangeAmt = sc.nextDouble();
-                sc.nextLine();
-
-                exchange.displayCurrencies();
-                System.out.println("\n***");
-                System.out.println("Source Currency: " + exchange.currencies.get(0).name);
-                System.out.println("Source Amount (PHP): " + exchangeAmt);
-
-                break;
-
-            case 5:
-                System.out.println("Record Exchange Rates\n");
-                exchange.displayCurrencies();
-
-                System.out.print("\nSelect Foreign Currency: ");
-                currencyChoice = sc.nextInt();
-                sc.nextLine();
-                System.out.print("Exchange Rate: ");
-                exchange.currencies.get(currencyChoice - 1).rate = sc.nextDouble();
-                sc.nextLine();
-
-                System.out.println("\n***");
-                System.out.println("Select Foreign Currency = " + exchange.currencies.get(currencyChoice - 1).name);
-                System.out.println("Exchange Rate = " + exchange.currencies.get(currencyChoice - 1).rate);
-
-                break;
-
-            case 6:
-                System.out.println("Show Interest Amount");
-                break;
-
-            case 0:
-                System.out.println("Exit");
-                break;
-
-            default:
-                System.out.println("Please choose a valid option.");
-        }
+        System.out.println("\n***");
+        System.out.println("Account Name: " + depositor);
+        System.out.println("Deposit Amount: " + depositAmt);
+        System.out.println("Balance: " + account.balance + "\n");
         
+        /* withdraw */
 
+        System.out.println("Withdraw Amount");
+        System.out.print("Account Name: ");
+        withdrawer = sc.nextLine().trim();
+        
+        System.out.println("Balance: " + account.balance);
+        System.out.println("Currency: " + account.currency);
+
+        System.out.print("Withdraw Amount: ");
+        withdrawAmt = sc.nextDouble();
+        sc.nextLine();
+        account.balance -= withdrawAmt;
+
+        System.out.println("\n***");
+        System.out.println("Account Name: " + withdrawer);
+        System.out.println("Withdraw Amount: " + withdrawAmt);
+        System.out.println("Balance: " + account.balance + "\n");
+        
+        /* exhange */
+
+        System.out.println("Foreign Currency Exchange");
+
+        System.out.print("Source Amount: ");
+        exchangeAmt = sc.nextDouble();
+        sc.nextLine();
+
+        exchange.displayCurrencies();
+        System.out.println("\n***");
+        System.out.println("Source Currency: " + exchange.currencies.get(0).name);
+        System.out.println("Source Amount (PHP): " + exchangeAmt + "\n");
+
+        /* rates */
+
+        System.out.println("Record Exchange Rates\n");
+        exchange.displayCurrencies();
+
+        System.out.print("\nSelect Foreign Currency: ");
+        currencyChoice = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Exchange Rate: ");
+        exchange.currencies.get(currencyChoice - 1).rate = sc.nextDouble();
+        sc.nextLine();
+
+        System.out.println("\n***");
+        System.out.println("Select Foreign Currency = " + exchange.currencies.get(currencyChoice - 1).name);
+        System.out.println("Exchange Rate = " + exchange.currencies.get(currencyChoice - 1).rate + "\n");
+        
         sc.close();
     }
 }
