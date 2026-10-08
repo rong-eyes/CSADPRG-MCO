@@ -66,21 +66,20 @@ int main(){
     printf("\n"); //Separator
 
     //Register Account Name
-    StringName regAccName;
+    StringName accName;
     printRegisterAccount();
-    scanf(" %100[^\n]", regAccName);   //format specifier to include spaces in the string up to 100 char
+    scanf(" %100[^\n]", accName);   //format specifier to include spaces in the string up to 100 char
 
     printf("\n***\n");
-    printf("Account Name = %s\n", regAccName);
+    printf("Account Name = %s\n", accName);
 
     printf("\n"); //Separator
 
     //Deposit Ammount
-    StringName depAccName;
     float depAmount;
     printf("Deposit Amount\n");
     printf("Account Name: ");
-    scanf(" %100[^\n]", depAccName);   //format specifier to include spaces in the string up to 100 char
+    scanf(" %100[^\n]", accName);   //format specifier to include spaces in the string up to 100 char
     printBalance(1000.00, "PHP");      //default value of 1000, PHP 
     
 
@@ -88,24 +87,23 @@ int main(){
     scanf("%f", &depAmount);
 
     printf("\n***\n");
-    printf("Account Name = %s\n", depAccName);
+    printf("Account Name = %s\n", accName);
     printf("Deposit Amount = %.2f\n", depAmount);
 
     printf("\n"); //Separator
 
     //Withdraw Ammount
-    StringName widAccName;
     float widAmount;
     printf("Withdraw Amount\n");
     printf("Account Name: ");
-    scanf(" %100[^\n]", widAccName);   //format specifier to include spaces in the string up to 100 char
+    scanf(" %100[^\n]", accName);   //format specifier to include spaces in the string up to 100 char
     printBalance(1000.00, "PHP");      //default value of 1000, PHP 
 
     printf("\nWithdraw Amount: ");
     scanf("%f", &widAmount);
 
     printf("\n***\n");
-    printf("Account Name = %s\n", widAccName);
+    printf("Account Name = %s\n", accName);
     printf("Withdraw Amount = %.2f\n", widAmount);
 
     printf("\n"); //Separator
