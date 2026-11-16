@@ -34,3 +34,8 @@ void printBalance(double balance, StringCurrency currency){
     printf("Current Balance: %.2lf\n", balance);
     printf("Currency: %s\n", currency);
 }
+
+void printReportsOption(){
+    printf("[1] Load the file\n");
+    printf("[2] Generate Reports\n");
+}

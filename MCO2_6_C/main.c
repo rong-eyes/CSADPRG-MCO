@@ -10,6 +10,13 @@ Paradigm: Procedural
 #include "exchange.c"
 #include "printFunctions.c"
 #include "csvData.c"
+#include "reportCommon.c"
+#include "accountSummary.c"
+#include "report1.c"
+#include "report2.c"
+#include "report3.c"
+#include "report4.c"
+#include "reports.c"
 #include "transactions.c"
 #include "menuFunctions.c"
 #include "inputCheck.c"
@@ -17,8 +24,14 @@ Paradigm: Procedural
 int main(){
     ExchangeRate toPHP = {1.00, 0.00, 0.00, 0.00, 0.00, 0.00};        //we assume PHP as the base currency so we just intialize it to 1 and the rest 0
     TransactionList list = {NULL, 0, 0};                              //intialize the list to point to null, 0 count, 0 capacity
-    int choice;                                                  
-    
+    int choice, totalRows, badRows;
+
+    //load the transactions
+    if(loadTransactions(TRANSACTIONS_CSV, &list, &totalRows, &badRows) == LOAD_NO_MEMORY){
+        printf("Not enough memory to load the transaction file.\n");
+        return 1;
+    }   
+
     do{
         printMainMenu();
         if(!readInt(&choice)){
@@ -49,11 +62,18 @@ int main(){
             showInterestMenu(&list);
             printf("\n");
         
+        }else if(choice == 7){
+            generateReportsMenu(&list, TRANSACTIONS_CSV);
+            printf("\n");
+
+        }else if(choice == 0){
+            printf("\nExiting the program.\n");
+
         }else{
             printf("Invalid option. Try again!\n\n");
         }
 
     }while(choice != 0);                    //program stop when 0 is inputted in the main menu
-    DestroyAccountList(&list);              //deallocate everything in the list
+    freeTransactions(&list);              //deallocate everything in the list
     return 0;
 }

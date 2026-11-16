@@ -191,7 +191,6 @@ void withdrawAmountMenu(TransactionList *A, const char *path){
         Transaction account;                        //local storage of transaction
         int found;
 
-
         printf("\nWithdraw Amount\n");
         promptName(accName);                        //keeps prompting till valid name
         found = searchAcc(A, accName, &account);        //look for the acc
@@ -219,9 +218,9 @@ void withdrawAmountMenu(TransactionList *A, const char *path){
                         if(saved == 1){
                             printf("Updated Balance: %.2lf\n", account.balance);
                         }else if(saved == -1){          
-                            printf("Withdrawal  saved, but the program could not update its records. Please restart.\n");
+                            printf("Withdrawal saved, but the program could not update its records. Please restart.\n");
                         }else{
-                            printf("Could not save the deposit to the file. Your balance was not changed.\n");
+                            printf("Could not save the Withdrawal to the file. Your balance was not changed.\n");
                         }
                     
                     }else if(check == -1){
@@ -346,5 +345,41 @@ void showInterestMenu(TransactionList *A){
         
         printf("\n");
         again = backToMainMenu();       //ask if they wanna go back to the main menu
+    }while(again);
+}
+
+void generateReportsMenu(TransactionList *A,  const char *path){
+    int again;                          //takes the return of backToMainMenu
+
+    do{
+        int choice, totalRows, badRows;
+
+        printf("\nGenerate Reports\n\n");
+        printReportsOption();
+
+        choice = promptChoice("\nEnter choice: ", 1, 2);         //keeps prompting till numeric input from 1 or 2 is inputted
+
+        if(choice == 1){
+            char loaded[NUM_LEN], kept[NUM_LEN], bad[NUM_LEN];
+            int status = loadTransactions(path, A, &totalRows, &badRows);
+
+            if(status == LOAD_OK){
+                formatCount(totalRows, loaded);
+                formatCount(A->count, kept);
+                formatCount(badRows, bad);
+                printf("Processing dataset... (%s rows loaded, %s filtered for PHP currency, %s invalid rows skipped)\n", loaded, kept, bad);
+
+            }else if(status == LOAD_NO_FILE){
+                printf("Could not open %s. Make sure the file is in the same folder as the program.\n", path);
+
+            }else{                                                  //LOAD_NO_MEMORY
+                printf("Not enough memory to load the whole file. Please restart the program.\n");
+            }
+        }else{
+            generateAllReports(A);
+        }
+    
+        printf("\n");
+        again = backToMainMenu();        //ask if they wanna go back to the main menu
     }while(again);
 }

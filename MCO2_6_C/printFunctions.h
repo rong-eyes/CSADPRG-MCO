@@ -7,5 +7,6 @@ void printMainMenu();
 void printRecordExchangeOptions();
 void printCurrencyOptions();
 void printBalance(double balance, StringCurrency currency);
+void printReportsOption();
 
 #endif

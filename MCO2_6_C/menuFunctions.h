@@ -4,6 +4,8 @@
 #include "printFunctions.h"
 #include "type.h"
 #include "csvData.h"
+#include "reportCommon.h"
+#include "reports.h"
 #include "transactions.h"
 #include "exchange.h"
 #include "inputCheck.h"
@@ -18,5 +20,6 @@ void withdrawAmountMenu(TransactionList *A, const char *path);
 void currencyExchangeMenu(ExchangeRate toPHP);
 void recordExchangeRateMenu(ExchangeRate toPHP);
 void showInterestMenu(TransactionList *A);
+void generateReportsMenu(TransactionList *A,  const char *path);
 
 #endif

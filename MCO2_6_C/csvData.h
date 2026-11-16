@@ -40,6 +40,7 @@ typedef struct{
 } TransactionList;
 
 
+int daysInMonth(int month, int year);
 int loadTransactions(const char *path, TransactionList *out, int *totalRows, int *badRows);
 void freeTransactions(TransactionList *l);
 int searchAcc(TransactionList *l, const StringName acc, Transaction *out);

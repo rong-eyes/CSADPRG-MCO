@@ -14,8 +14,8 @@ static int listPush(TransactionList *l, const Transaction *t){
     return 1;                       //means succesfully added the row to the array
 }
 
-//helper function to get the allowed days of each month
-static int daysInMonth(int month, int year){
+//helper function to get the allowed days of each month (not static anymore since its used in report)
+int daysInMonth(int month, int year){
     //static const array of number of days per month
     static const int days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
