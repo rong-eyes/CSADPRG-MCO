@@ -182,8 +182,6 @@ Independent check used for the summary totals (Git Bash):
 
 ## 6. Results
 
-Paste the contents of `tests\test_results.txt` here after running:
-
     PASS  TC-M-01     Main menu rejects out-of-range, text and empty choices
     PASS  TC-M-02     Reports sub-menu rejects invalid choices
     PASS  TC-REG-01   Register: new account gets highest existing number + 1 (not count + 1)
