@@ -1,0 +1,31 @@
+﻿MCO2 test results - 2026-11-25 20:47:16
+Compiler: gcc.exe (Rev8, Built by MSYS2 project) 15.2.0
+
+PASS  TC-M-01     Main menu rejects out-of-range, text and empty choices
+PASS  TC-M-02     Reports sub-menu rejects invalid choices
+PASS  TC-REG-01   Register: new account gets highest existing number + 1 (not count + 1)
+PASS  TC-REG-02   Register: 4,999.99 / text / negative rejected, exactly 5,000.00 accepted
+PASS  TC-REG-03   Register: duplicate account name is refused
+PASS  TC-REG-04   Register: empty name, name with comma, 101-char name rejected
+PASS  TC-REG-05   Register: name of exactly 100 characters is accepted
+PASS  TC-REG-06   Register: deposit 5000.999 is rounded DOWN to 5000.99
+PASS  TC-REG-07   Missing CSV: load/generate fail gracefully, first account = 1092000001 and file is created
+PASS  TC-DEP-01   Deposit 500 -> balance 10,500.00 and row saved
+PASS  TC-DEP-02   Deposit: 0, negative, text rejected; 100.009 rounded down to 100.00
+PASS  TC-DEP-03   Deposit: unknown account and wrong letter case are refused
+PASS  TC-WIT-01   Withdraw 2,500 -> balance 7,500.00 and row saved
+PASS  TC-WIT-02   Withdraw: 0.01 over balance refused, 0 refused, exact full balance allowed
+PASS  TC-WIT-03   Withdraw from an account with 0.00 balance is blocked
+PASS  TC-WIT-04   Withdraw 0.001 is rounded UP to 0.01
+PASS  TC-PER-01   Persistence: deposit, restart program, balance is still 10,500.00
+PASS  TC-INT-01   Show interest: 0 days rejected; 3-day table compounds 1.37/day
+PASS  TC-V-01     Validation: 21 rows -> 3 valid PHP, 2 non-PHP filtered, 16 invalid skipped
+PASS  TC-R1-01    Report 1: filter at 100,000, tier boundaries, partial month, same-day rows, ties
+PASS  TC-R1-02    Report 1: unfinished newest month -> previous month is used
+PASS  TC-R1-03    Report 1: leap-year February (29 days) counted as a complete month
+PASS  TC-R2-01    Report 2 + summary.json: 10,000 filter, latest balance used, totals
+PASS  TC-R3-01    Report 3: 500,000 and 90% boundaries, N/A velocity, sort order
+PASS  TC-R4-01    Report 4: year boundary, negative net flow, sort; empty Report 1 keeps header
+PASS  TC-FULL-01  Full dataset: counts, all 4 reports and summary.json identical to baseline
+
+Total: 26  Passed: 26  Failed: 0
