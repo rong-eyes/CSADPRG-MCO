@@ -1,0 +1,10 @@
+7
+1
+N
+2
+Y
+1
+Juan Dela Cruz
+10000
+Y
+0
