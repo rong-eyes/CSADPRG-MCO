@@ -13,6 +13,7 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 //helper data classes
 data class lastTransac(var transacdate: LocalDate, var bal: Double)
@@ -88,20 +89,25 @@ class FileReadWrite(){
                         return false
                     }
 
-                    val value = account(
-                        name = col[0].trim(),
-                        id = col[1].trim().toInt(),
-                        date = LocalDate.parse(col[2].trim(),DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                        balance = col[7].trim().toDouble()
-                    )
+                    if(col[4].trim().equals("PHP")){   //only does it if cuency is PHP
+                        try{
+                            val value = account(
+                            name = col[0].trim(),
+                            id = col[1].trim().toInt(),
+                            date = LocalDate.parse(col[2].trim(),DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                            balance = col[7].trim().toDouble()
+                            )
 
-                    val existing = accounts.find {it.accountNumber == value.accountNumber}
-
-                        if (existing == null) {
-                            accounts.add(value)
-                        } else {
-                            existing.currentBalance = value.currentBalance
-                        }
+                            val existing = accounts.find {it.accountNumber == value.accountNumber}
+                                if (existing == null) {
+                                    accounts.add(value)
+                                } else {
+                                    existing.currentBalance = value.currentBalance
+                                }
+                        }catch (e: DateTimeParseException) {
+                            //left blank, skip if invalid
+                        }   
+                    }
                 }
 
             if (accounts.isEmpty()) {
@@ -274,7 +280,6 @@ class FileReadWrite(){
 
         return totalInterest
     }
-
     
     fun interest_report(acc: MutableList<account>): String {
         //insert variables
@@ -302,7 +307,7 @@ class FileReadWrite(){
                 calculateExpectedInterest(balance)
             }
 
-        totalInterest = qualifiedAccounts.values.sum()
+        totalInterest = "%.2f".format(qualifiedAccounts.values.sum()).toDouble()
 
         val report2 = File("report2_interest_expense_projection.csv")
 
@@ -390,8 +395,11 @@ class FileReadWrite(){
         }
 
         //after the entire list is filled up we are now able to sort
-        clients.sortBy {it.date}
-        clients.sortByDescending {it.riskFlag}
+        clients.sortWith(
+                    compareBy<accountBehavior> { it.date }
+                    .thenByDescending { it.riskFlag }
+                    .thenBy { it.accNum }
+                )
 
         //FILE WRITING PORTION
         val report3 = File("report3_suspicious_client_behavior.csv")
