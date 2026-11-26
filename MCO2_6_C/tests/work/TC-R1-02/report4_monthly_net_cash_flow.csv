@@ -1,0 +1,3 @@
+AccountName,Month,TotalWithdrawalAmounts,TotalDepositAmounts,NetCashFlow,EndOfMonthBalance
+October Rich,10/2026,"0.00","200,000.00","200,000.00","200,000.00"
+October Rich,11/2026,"150,000.00","0.00","-150,000.00","50,000.00"

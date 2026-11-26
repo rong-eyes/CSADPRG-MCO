@@ -1,0 +1,10 @@
+AccountName,CurrentBalance,ExpectedInterest
+Gold Top,"999,999.99","4,117.77"
+Platinum Bottom,"1,000,000.00","4,117.77"
+Silver Top,"499,999.99","2,058.89"
+Gold Bottom,"500,000.00","2,058.89"
+Mid Month Opener,"310,000.00","1,276.50"
+Withdraw Mid Month,"138,000.00","568.25"
+Below Filter,"99,999.99","411.77"
+Exact Filter,"100,000.00","411.77"
+Tie Breaker,"100,000.00","411.77"

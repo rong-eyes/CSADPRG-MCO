@@ -1,0 +1,8 @@
+AccountName,Date,TotalWithdrawalAmounts,NumberOfDeposits,TotalDepositAmounts,TurnoverVelocity,RiskFlagLevel
+Quiet,10/12/2025,"0.00",1,"8,000.00","0.00",Normal
+Saver,15/12/2025,"0.00",1,"50,000.00","0.00",Normal
+Saver,20/12/2025,"0.00",1,"10,000.00","0.00",Normal
+Spender,31/12/2025,"0.00",1,"30,000.00","0.00",Normal
+Spender,01/01/2026,"25,000.00",0,"0.00",N/A,Normal
+Saver,05/01/2026,"20,000.00",0,"0.00",N/A,Normal
+Saver,31/01/2026,"0.00",1,"5,000.00","0.00",Normal

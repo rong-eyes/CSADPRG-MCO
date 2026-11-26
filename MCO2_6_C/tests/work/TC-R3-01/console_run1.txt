@@ -1,0 +1,70 @@
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Generate Reports
+
+[1] Load the file
+[2] Generate Reports
+
+Enter choice: Processing dataset... (14 rows loaded, 14 filtered for PHP currency, 0 invalid rows skipped)
+
+Back to the Main Menu (Y/N): 
+Generate Reports
+
+[1] Load the file
+[2] Generate Reports
+
+Enter choice: Generating reports...
+Outputs saved to individual files...
+
+Report 1: Banking Privilege Tiers
+(Full table exported to report1_banking_privilege_tiers.csv)
+
+Report 2: Interest Expense Projection
+AccountName          CurrentBalance     ExpectedInterest    
+Big Withdrawer       500,000.00         2,058.89            
+Almost Big           100,000.01         411.77              
+(Full table exported to report2_interest_expense_projection.csv)
+
+Report 3: Suspicious Client Behavior
+AccountName          Date        TotalWithdrawalAmounts  NumberOfDeposits  TotalDepositAmounts  TurnoverVelocity  RiskFlagLevel
+Big Withdrawer       01/11/2026  0.00                    1                 1,000,000.00         0.00              Normal
+Almost Big           01/11/2026  0.00                    1                 600,000.00           0.00              Normal
+(Full table exported to report3_suspicious_client_behavior.csv)
+
+Report 4: Monthly Net Cash Flow
+AccountName          Month    TotalWithdrawalAmounts  TotalDepositAmounts  NetCashFlow    EndOfMonthBalance
+Velocity Over        11/2026  5,000.00                51,000.00            46,000.00      46,000.00
+Velocity Exact       11/2026  9,000.00                60,000.00            51,000.00      51,000.00
+(Full table exported to report4_monthly_net_cash_flow.csv)
+
+Summary State (summary.json):
+{
+  "total_accounts": 5,
+  "total_deposits": 1771000.00,
+  "total_withdrawals": 1022998.99,
+  "total_balance": 748001.01,
+  "total_interest_expense": 3080.08
+}
+
+Back to the Main Menu (Y/N): 
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Exiting the program.

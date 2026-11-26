@@ -1,0 +1,11 @@
+AccountName,Date,TotalWithdrawalAmounts,NumberOfDeposits,TotalDepositAmounts,TurnoverVelocity,RiskFlagLevel
+Big Withdrawer,01/11/2026,"0.00",1,"1,000,000.00","0.00",Normal
+Almost Big,01/11/2026,"0.00",1,"600,000.00","0.00",Normal
+Velocity Exact,01/11/2026,"0.00",1,"50,000.00","0.00",Normal
+Velocity Below,01/11/2026,"0.00",1,"50,000.00","0.00",Normal
+Velocity Over,01/11/2026,"0.00",1,"50,000.00","0.00",Normal
+Big Withdrawer,02/11/2026,"500,000.00",0,"0.00",N/A,Suspicious
+Velocity Exact,02/11/2026,"9,000.00",1,"10,000.00","90.00",Suspicious
+Velocity Over,02/11/2026,"5,000.00",2,"1,000.00","500.00",Suspicious
+Almost Big,02/11/2026,"499,999.99",0,"0.00",N/A,Normal
+Velocity Below,02/11/2026,"8,999.00",1,"10,000.00","89.99",Normal

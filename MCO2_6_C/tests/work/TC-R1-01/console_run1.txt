@@ -1,0 +1,73 @@
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Generate Reports
+
+[1] Load the file
+[2] Generate Reports
+
+Enter choice: Processing dataset... (12 rows loaded, 12 filtered for PHP currency, 0 invalid rows skipped)
+
+Back to the Main Menu (Y/N): 
+Generate Reports
+
+[1] Load the file
+[2] Generate Reports
+
+Enter choice: Generating reports...
+Outputs saved to individual files...
+
+Report 1: Banking Privilege Tiers
+AccountName          AccountAge  CurrentBalance     AverageDailyBalance  PrivilegeTier
+Platinum Bottom      60          1,000,000.00       1,000,000.00         Platinum
+Gold Top             60          999,999.99         999,999.99           Gold
+(Full table exported to report1_banking_privilege_tiers.csv)
+
+Report 2: Interest Expense Projection
+AccountName          CurrentBalance     ExpectedInterest    
+Gold Top             999,999.99         4,117.77            
+Platinum Bottom      1,000,000.00       4,117.77            
+(Full table exported to report2_interest_expense_projection.csv)
+
+Report 3: Suspicious Client Behavior
+AccountName          Date        TotalWithdrawalAmounts  NumberOfDeposits  TotalDepositAmounts  TurnoverVelocity  RiskFlagLevel
+Below Filter         01/09/2026  0.00                    1                 99,999.99            0.00              Normal
+Exact Filter         01/09/2026  0.00                    1                 100,000.00           0.00              Normal
+(Full table exported to report3_suspicious_client_behavior.csv)
+
+Report 4: Monthly Net Cash Flow
+AccountName          Month    TotalWithdrawalAmounts  TotalDepositAmounts  NetCashFlow    EndOfMonthBalance
+Below Filter         09/2026  0.00                    99,999.99            99,999.99      99,999.99
+Exact Filter         09/2026  0.00                    100,000.00           100,000.00     100,000.00
+(Full table exported to report4_monthly_net_cash_flow.csv)
+
+Summary State (summary.json):
+{
+  "total_accounts": 10,
+  "total_deposits": 3852999.97,
+  "total_withdrawals": 100000.00,
+  "total_balance": 3752999.97,
+  "total_interest_expense": 15433.38
+}
+
+Back to the Main Menu (Y/N): 
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Exiting the program.

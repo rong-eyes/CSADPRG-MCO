@@ -1,0 +1,36 @@
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Show Interest Amount
+Account Name: Current Balance: 10000.00
+Currency: PHP
+Interest Rate: 5%
+
+Total Number of Days: Invalid days. Try again!
+
+Total Number of Days: Day  | Interest | Balance       |
+1    | 1.37     | 10001.37      |
+2    | 1.37     | 10002.74      |
+3    | 1.37     | 10004.11      |
+
+Back to the Main Menu (Y/N): 
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Exiting the program.

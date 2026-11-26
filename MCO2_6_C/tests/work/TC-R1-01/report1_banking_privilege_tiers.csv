@@ -1,0 +1,9 @@
+AccountName,AccountAge,CurrentBalance,AverageDailyBalance,PrivilegeTier
+Platinum Bottom,60,"1,000,000.00","1,000,000.00",Platinum
+Gold Top,60,"999,999.99","999,999.99",Gold
+Gold Bottom,60,"500,000.00","500,000.00",Gold
+Silver Top,60,"499,999.99","499,999.99",Silver
+Mid Month Opener,15,"310,000.00","160,000.00",Silver
+Withdraw Mid Month,60,"138,000.00","158,000.00",Silver
+Exact Filter,60,"100,000.00","100,000.00",Silver
+Tie Breaker,60,"100,000.00","100,000.00",Silver

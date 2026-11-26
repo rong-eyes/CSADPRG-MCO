@@ -1,0 +1,54 @@
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Generate Reports
+
+[1] Load the file
+[2] Generate Reports
+
+Enter choice: Could not open bank_transactions.csv. Make sure the file is in the same folder as the program.
+
+Back to the Main Menu (Y/N): 
+Generate Reports
+
+[1] Load the file
+[2] Generate Reports
+
+Enter choice: No transactions loaded. Load the file first.
+
+Back to the Main Menu (Y/N): 
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: Register Account Name
+Account Name: 
+Initial Deposit: Account created successfully!
+
+Back to the Main Menu (Y/N): 
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Exiting the program.

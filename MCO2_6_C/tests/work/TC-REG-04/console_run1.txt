@@ -1,0 +1,30 @@
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: Register Account Name
+Account Name: Invalid name (empty, over 100 characters, or contains a comma). Try again!
+Account Name: Invalid name (empty, over 100 characters, or contains a comma). Try again!
+Account Name: Invalid name (empty, over 100 characters, or contains a comma). Try again!
+Account Name: 
+Initial Deposit: Account created successfully!
+
+Back to the Main Menu (Y/N): 
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Exiting the program.

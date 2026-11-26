@@ -1,0 +1,6 @@
+AccountName,Month,TotalWithdrawalAmounts,TotalDepositAmounts,NetCashFlow,EndOfMonthBalance
+Velocity Over,11/2026,"5,000.00","51,000.00","46,000.00","46,000.00"
+Velocity Exact,11/2026,"9,000.00","60,000.00","51,000.00","51,000.00"
+Velocity Below,11/2026,"8,999.00","60,000.00","51,001.00","51,001.00"
+Almost Big,11/2026,"499,999.99","600,000.00","100,000.01","100,000.01"
+Big Withdrawer,11/2026,"500,000.00","1,000,000.00","500,000.00","500,000.00"

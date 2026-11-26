@@ -1,0 +1,6 @@
+AccountName,CurrentBalance,ExpectedInterest
+Big Withdrawer,"500,000.00","2,058.89"
+Almost Big,"100,000.01","411.77"
+Velocity Below,"51,001.00","210.01"
+Velocity Exact,"51,000.00","210.00"
+Velocity Over,"46,000.00","189.41"

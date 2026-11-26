@@ -1,0 +1,71 @@
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Generate Reports
+
+[1] Load the file
+[2] Generate Reports
+
+Enter choice: Processing dataset... (2 rows loaded, 2 filtered for PHP currency, 0 invalid rows skipped)
+
+Back to the Main Menu (Y/N): 
+Generate Reports
+
+[1] Load the file
+[2] Generate Reports
+
+Enter choice: Generating reports...
+Outputs saved to individual files...
+
+Report 1: Banking Privilege Tiers
+AccountName          AccountAge  CurrentBalance     AverageDailyBalance  PrivilegeTier
+October Rich         30          200,000.00         200,000.00           Silver
+(Full table exported to report1_banking_privilege_tiers.csv)
+
+Report 2: Interest Expense Projection
+AccountName          CurrentBalance     ExpectedInterest    
+October Rich         50,000.00          205.88              
+(Full table exported to report2_interest_expense_projection.csv)
+
+Report 3: Suspicious Client Behavior
+AccountName          Date        TotalWithdrawalAmounts  NumberOfDeposits  TotalDepositAmounts  TurnoverVelocity  RiskFlagLevel
+October Rich         01/10/2026  0.00                    1                 200,000.00           0.00              Normal
+October Rich         15/11/2026  150,000.00              0                 0.00                 N/A               Normal
+(Full table exported to report3_suspicious_client_behavior.csv)
+
+Report 4: Monthly Net Cash Flow
+AccountName          Month    TotalWithdrawalAmounts  TotalDepositAmounts  NetCashFlow    EndOfMonthBalance
+October Rich         10/2026  0.00                    200,000.00           200,000.00     200,000.00
+October Rich         11/2026  150,000.00              0.00                 -150,000.00    50,000.00
+(Full table exported to report4_monthly_net_cash_flow.csv)
+
+Summary State (summary.json):
+{
+  "total_accounts": 1,
+  "total_deposits": 200000.00,
+  "total_withdrawals": 150000.00,
+  "total_balance": 50000.00,
+  "total_interest_expense": 205.88
+}
+
+Back to the Main Menu (Y/N): 
+Select Transaction:
+[1] Register Account Name
+[2] Deposit Amount
+[3] Withdraw Amount
+[4] Currency Exchange
+[5] Record Exchange Rates
+[6] Show Interest Amount
+[7] Generate Reports
+[0] Exit Program
+
+Choice: 
+Exiting the program.

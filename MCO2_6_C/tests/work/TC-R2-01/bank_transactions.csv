@@ -1,0 +1,10 @@
+account_name,account_number,date,time,currency,amount,type,current_balance
+Below Interest Filter,1092000001,01/03/2020,09:00:00,PHP,9999.99,deposit,9999.99
+Exact Interest Filter,1092000002,01/03/2020,09:00:00,PHP,10000.00,deposit,10000.00
+Big Saver,1092000003,01/03/2020,09:00:00,PHP,365000.00,deposit,365000.00
+Was Rich Now Poor,1092000004,01/03/2020,09:00:00,PHP,500000.00,deposit,500000.00
+Was Rich Now Poor,1092000004,02/03/2020,09:00:00,PHP,495000.00,withdrawal,5000.00
+Was Poor Now Rich,1092000005,01/03/2020,09:00:00,PHP,5000.00,deposit,5000.00
+Was Poor Now Rich,1092000005,02/03/2020,09:00:00,PHP,95000.00,deposit,100000.00
+Zero Balance,1092000006,01/03/2020,09:00:00,PHP,5000.00,deposit,5000.00
+Zero Balance,1092000006,02/03/2020,09:00:00,PHP,5000.00,withdrawal,0.00

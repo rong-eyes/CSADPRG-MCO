@@ -1,0 +1,12 @@
+AccountName,Date,TotalWithdrawalAmounts,NumberOfDeposits,TotalDepositAmounts,TurnoverVelocity,RiskFlagLevel
+Below Filter,01/09/2026,"0.00",1,"99,999.99","0.00",Normal
+Exact Filter,01/09/2026,"0.00",1,"100,000.00","0.00",Normal
+Silver Top,01/09/2026,"0.00",1,"499,999.99","0.00",Normal
+Gold Bottom,01/09/2026,"0.00",1,"500,000.00","0.00",Normal
+Gold Top,01/09/2026,"0.00",1,"999,999.99","0.00",Normal
+Platinum Bottom,01/09/2026,"0.00",1,"1,000,000.00","0.00",Normal
+Withdraw Mid Month,01/09/2026,"0.00",1,"200,000.00","0.00",Normal
+Tie Breaker,01/09/2026,"0.00",1,"100,000.00","0.00",Normal
+Withdraw Mid Month,11/10/2026,"100,000.00",1,"38,000.00","263.16",Suspicious
+Mid Month Opener,16/10/2026,"0.00",1,"310,000.00","0.00",Normal
+Sentinel Account,31/10/2026,"0.00",1,"5,000.00","0.00",Normal
