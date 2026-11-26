@@ -120,105 +120,120 @@ fun main(){
                 }
             }
 
-        }while(choice > 0 ) //0 is to terminate the progrm
+        }while(choice !=0)//0 is to terminate the progrm
     }
 }
 
 //FUNCTIONS
-fun registerAccountName(acc: MutableList<account>, now: LocalDate, fileHandler: FileReadWrite): account {
+fun registerAccountName(acc: MutableList<account>,now: LocalDate, fileHandler: FileReadWrite): account {
     println("Register Account Name\n")
-    print("Account Name: ")
-    var name = readln()
+    var name: String
+    while (true) {
+        print("Account Name: ")
+        name = readln().trim()
 
-    if(acc.any { it.accountName == name }) {
-        println("Account name already exists. Please choose a different name.\n")
-        return registerAccountName(acc,now, fileHandler) // Recursively call the function to prompt for a new name
-    }else{
-        print("Initial Deposit: ")
-        var deposit = readln().toDouble()
-        if(deposit < 5000){
-            println("Initial Deposit must be at least 5,000.\n")
-            return registerAccountName(acc,now, fileHandler) // Recursively call the function to prompt for a new name
-        }else{
-            var new_id = fileHandler.generate_accNumber()
-
-            val newAcc = account(name,new_id, now, deposit)
-            fileHandler.write_transaction(newAcc, deposit, true)
-            println("\nAccount created successfully!\n")
-            return newAcc
+        if (name.isBlank()) {
+            println("Account name cannot be empty.\n")
+        } else if (name.length > 100) {
+            println("Account name cannot exceed 100 characters.\n")
+        } else if (!name.all {it in 'A'..'Z' || it in 'a'..'z' || it == ' '}) {
+            println("Account name must contain letters and spaces only.\n")
+        } else if (acc.any {it.accountName.equals(name, ignoreCase = true)}) {
+            println("Account name already exists. Please choose a different name.\n")
+        } else {
+            break
         }
     }
+
+    var deposit: Double
+    while (true) {
+        print("Initial Deposit: ")
+        val input = readln().trim().toDoubleOrNull()
+
+        if (input == null || !input.isFinite()) {
+            println("Invalid input. Please enter a valid number.\n")
+        } else if (input < 5000.0) {
+            println("Initial Deposit must be at least 5,000.\n")
+        } else {
+             deposit = input
+            break
+        }
+    }
+
+    val new_id = fileHandler.generate_accNumber()
+    val newAcc = account(name, new_id, now, deposit)
+    fileHandler.write_transaction(newAcc, deposit, true)
+    println("\nAccount created successfully!\n")
+    return newAcc
 }
 
 fun depositAmount(accounts: MutableList<account>, fileHandler: FileReadWrite) {
     println("Deposit Amount\n")
     print("Account Name: ")
-    var name = readln()
-    if(accounts.any { it.accountName == name }) {
-        val acc = accounts.find { it.accountName == name }
-
-        if(acc == null) {
-            println("Account not found.")
-            return
-        }else{
-            acc.printAccDetails()
-            print("Deposit Amount: ")            
-            var depositAmount: Double?= readln().toDoubleOrNull()
-            
-            if(depositAmount == null){
-                println("Invalid Input")
-                return
-            }
-
-            if(depositAmount <= 0.0) {
-                println("Deposit amount must be greater than zero. Please try again.\n")
-                return
-            }
-            acc.deposit(depositAmount)
-            println("Updated Balance: ${String.format("%.2f",acc.currentBalance)}\n")
-            fileHandler.write_transaction(acc, depositAmount, true)
-        }
-    } else {
+    val name = readln().trim()
+    val acc = accounts.find { it.accountName == name }
+    if (acc == null) {
         println("Account name does not exist.")
+        return
     }
+
+    acc.printAccDetails()
+    var depositAmount: Double
+    while (true) {
+        print("Deposit Amount: ")
+        val input = readln().trim().toDoubleOrNull()
+
+        if (input == null || !input.isFinite()) {
+            println("Invalid input. Please enter a valid number.\n")
+        } else if (input <= 0.0) {
+            println("Deposit amount must be greater than zero.\n")
+        } else {
+            depositAmount = input
+            break
+        }
+    }
+
+    acc.deposit(depositAmount)
+    println("Updated Balance: ${String.format("%.2f", acc.currentBalance)}\n")
+    fileHandler.write_transaction(acc, depositAmount, true)
 }
 
-fun withdrawAmount(accounts: MutableList<account>, fileHandler:FileReadWrite) {
+fun withdrawAmount(accounts: MutableList<account>, fileHandler: FileReadWrite) {
     println("Withdraw Amount\n")
     print("Account Name: ")
-    var name = readln()
-    if(accounts.any { it.accountName == name }) {
-        val acc = accounts.find { it.accountName == name }
-
-        if(acc == null) {
-            println("Account not found.")
-            return
-        }else if(acc.currentBalance <= 0.0) {
-            println("Insufficient balance. Cannot withdraw from an account with zero balance.")
-            return
-        }else{
-            acc.printAccDetails()
-            print("Withdraw Amount: ")
-            var withdrawAmount: Double? = readln().toDoubleOrNull()
-
-            if(withdrawAmount == null){
-                println("Invalid Input")
-                return
-            }
-            
-            if(withdrawAmount <= 0.0) {
-                println("Withdraw amount must be greater than zero. Please try again.")
-                return
-            }
-
-            acc.withdraw(withdrawAmount)
-            println("Updated Balance: ${String.format("%.2f",acc.currentBalance)}\n")
-            fileHandler.write_transaction(acc, withdrawAmount, false)
-            }
-
-    } else {
+    val name = readln().trim()
+    val acc = accounts.find { it.accountName == name }
+    if (acc == null) {
         println("Account name does not exist.")
+        return
     }
+    
+    if (acc.currentBalance <= 0.0) {
+        println("Insufficient balance. Cannot withdraw from an account with zero balance.")
+        return
+    }
+
+    acc.printAccDetails()
+    var withdrawAmount: Double
+    while (true) {
+        print("Withdraw Amount: ")
+        val input = readln().trim().toDoubleOrNull()
+
+        if (input == null || !input.isFinite()) {
+            println("Invalid input. Please enter a valid number.\n")
+        } else if (input <= 0.0) {
+            println("Withdraw amount must be greater than zero.\n")
+        } else if (input > acc.currentBalance) {
+            println("Insufficient balance. Please enter a smaller amount.\n")
+        } else {
+            withdrawAmount = input
+            break
+        }
+    }
+
+    acc.withdraw(withdrawAmount)
+    println("Updated Balance: ${String.format("%.2f", acc.currentBalance)}\n")
+    fileHandler.write_transaction(acc, withdrawAmount, false)
 }
 
 //for readbility
@@ -246,76 +261,84 @@ fun convertCurrency(amount: Double, sourceRate: Double, targetRate: Double): Dou
     return (amount / targetRate) * sourceRate
 }
 
-fun currencyExchange(options: Map<Int, String>, currencies: MutableMap<String, Double>){
+fun currencyExchange(options: Map<Int, String>,currencies: MutableMap<String, Double>) {
     println("Foreign Currency Exchange\nSource Currency Option:")
     printCurrencies(false)
-    
     print("Source Currency: ")
-    var sourceChoice = readln().toInt()
-
-    if(sourceChoice <= 0){
-
+    val sourceChoice = readln().trim().toIntOrNull()
+    if (sourceChoice == null || options[sourceChoice] == null) {
         println("Invalid Input.")
+        return
+    }
 
-    } else if(currencies[options[sourceChoice]] == 0.0){
+    val sourceName = options[sourceChoice]!!
+    val sourceCurrency = currencies[sourceName]
+    if (sourceCurrency == null || sourceCurrency <= 0.0 || !sourceCurrency.isFinite()) {
+        println("Exchange Rate for $sourceName is not recorded yet. Please record the exchange rate first.\n")
+        return
+    }
 
-        println("Exchange Rate for ${options[sourceChoice]} is not recorded yet. Please record the exchange rate first.\n")  
-    
-    }else {
-        val sourceCurrency = currencies[options[sourceChoice]] ?: 0.0     //safety in case it maps to a null
-
+    var sourceAmount: Double
+    while (true) {
         print("Source Amount: ")
-        var sourceAmount = readln().toDouble()
-
-        println("\nExchanged Currency Option:")
-        printCurrencies(false)
-
-
-        print("Exchange Currency: ")
-        var exchangedChoice = readln().toInt()
-
-        if(exchangedChoice <= 0){
-
-            println("Invalid Input.")
-
-        }else if(currencies[options[exchangedChoice]] == 0.0){
-
-            println("Exchange Rate for ${options[exchangedChoice]} is not recorded yet. Please record the exchange rate first.\n")
-        
-        }else {
-
-            val exchangeCurrency = currencies[options[exchangedChoice]] ?: 0.0     //safety in case it maps to a null 
-            print("Exchange Rate: ${convertCurrency(sourceAmount, sourceCurrency, exchangeCurrency).let { String.format("%.2f", it) }} \n")
+        val input = readln().trim().toDoubleOrNull()
+        if (input == null || !input.isFinite()) {
+            println("Invalid input. Please enter a valid number.\n")
+        } else if (input <= 0.0) {
+            println("Amount must be greater than zero.\n")
+        } else {
+            sourceAmount = input
+            break
         }
     }
+
+    println("\nExchanged Currency Option:")
+    printCurrencies(false)
+    print("Exchange Currency: ")
+    val exchangedChoice = readln().trim().toIntOrNull()
+    if (exchangedChoice == null || options[exchangedChoice] == null) {
+        println("Invalid Input.")
+        return
+    }
+
+    val targetName = options[exchangedChoice]!!
+    val exchangeCurrency = currencies[targetName]
+    if (exchangeCurrency == null || exchangeCurrency <= 0.0 || !exchangeCurrency.isFinite()) {
+        println("Exchange Rate for $targetName is not recorded yet. Please record the exchange rate first.\n")
+        return
+    }
+
+    val result = convertCurrency(sourceAmount, sourceCurrency, exchangeCurrency)
+    println("Exchange Amount: ${String.format("%.2f", result)} $targetName\n")
 }
 
-fun recordExchangeRate(currencies: MutableMap<String, Double>, options: Map<Int, String>): MutableMap<String, Double> {
+fun recordExchangeRate(currencies: MutableMap<String, Double>,options: Map<Int, String>): MutableMap<String, Double> {
     println("Record Exchange Rate\n")
     printCurrencies(true)
-
     print("Select Foreign Currency: ")
-    var choice = readln().toInt()
-
-    if(choice <= 0){
-
+    val choice = readln().trim().toIntOrNull()
+    if (choice == null || options[choice] == null) {
         println("Invalid Input.")
+        return currencies
+    }
+    val selectedCurrency = options[choice]!!  //makes it ead-only, neve null bc it selects fom  pedefined map
+    var exchangeRate: Double
+    while (true) {
+        print("Exchange Rate: ")
+        val input = readln().trim().toDoubleOrNull()
 
-    }else {
-
-        println("Exchange Rate: ")
-        var exchangeRate = readln().toDouble()
-
-        val selectedCurrency = options[choice]
-
-        if(exchangeRate > 0.0 && selectedCurrency != null){
-            currencies[selectedCurrency] = exchangeRate
-            println("Exchange Rate for $selectedCurrency has been updated to $exchangeRate\n")
-        }else{
-            println("Invalid Input. Please try again.")
+        if (input == null || !input.isFinite()) {
+            println("Invalid input. Please enter a valid number.\n")
+        } else if (input <= 0.0) {
+            println("Exchange rate must be greater than zero.\n")
+        } else {
+            exchangeRate = input
+            break
         }
     }
 
+    currencies[selectedCurrency] = exchangeRate
+    println("Exchange Rate for $selectedCurrency has been updated to $exchangeRate\n")
     return currencies
 }
 
@@ -326,34 +349,42 @@ fun recordExchangeRate(currencies: MutableMap<String, Double>, options: Map<Int,
 */
 fun interestAmount(accounts: MutableList<account>) {
     println("Show Interest Amount\n")
-    print("Account Name:")
-    val name = readln()
+    print("Account Name: ")
+    val name = readln().trim()
     val acc = accounts.find { it.accountName == name }
-    if(acc == null) {
+    if (acc == null) {
         println("Account name does not exist.")
         return
-    }else{
-        val annualInterest: Double = 0.05   //5% annual interest
-        fun dailyInterest(bal: Double) = bal + (acc.currentBalance * (annualInterest / 365))
-
-        println("Interest Rate: ${annualInterest * 100}% \n\n")
-
+    }
+    val annualInterest: Double = 0.05
+    fun dailyInterest(bal: Double) = bal + (bal * (annualInterest / 365))
+    println("Interest Rate: ${annualInterest * 100}%\n")
+    var totalDays: Int
+    while (true) {
         print("Total Number of Days: ")
-        var totalDays = readln().toIntOrNull()
+        val input = readln().trim().toIntOrNull()
 
-        if(totalDays == null){
-            println("Input must be Integer.")
-            return
+        if (input == null) {
+            println("Invalid input. Please enter a whole number.\n")
+        } else if (input <= 0) {
+            println("Number of days must be greater than zero.\n")
+        } else {
+            totalDays = input
+            break
         }
+    }
 
-        var bal = acc.currentBalance
-
-        println("\nDay  | Interest  | Balance  |")
-        for(i in 1..totalDays){
-            val interest = dailyInterest(bal) - bal
-            bal = dailyInterest(bal)
-            println("${i.toString().padEnd(4)} | ${String.format("%.2f", interest).padEnd(9)} | ${String.format("%.2f", bal).padEnd(8)} |")
-        }
+    var bal = acc.currentBalance
+    println("\nDay  | Interest  | Balance  |")
+    for (i in 1..totalDays) {
+        val newBalance = dailyInterest(bal)
+        val interest = newBalance - bal
+        bal = newBalance
+        println(
+            "${i.toString().padEnd(4)} | " +
+            "${String.format("%.2f", interest).padEnd(9)} | " +
+            "${String.format("%.2f", bal).padEnd(8)} |"
+        )
     }
 }
 
@@ -361,7 +392,7 @@ fun generate_reports(acc: MutableList<account>, fileHandler: FileReadWrite){
     println("Generate Reports\n")
 
     println("[1] Load the file\n[2] Generate Reports\nEnter choice: ")
-    var choice = readln().toInt()
+    var choice = readln().toIntOrNull()
     if(choice != 1 && choice != 2){
         println("Invalid Input.")
     }else if(choice  == 1){
