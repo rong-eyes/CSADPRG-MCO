@@ -75,19 +75,26 @@ setRates <- function(rates, rateValues){
   return(rateValues)
 }
 
-registerName <- function(new_Account){
+registerName <- function(bank_df){
   nameExit <- "N"
   
+  
   while(nameExit != "Y"){
+    accountDeposit <- 0.0
     accountName <- readline("Account Name: ")
-    accountDeposit <- readline("Insert Full Name: ")
+    while(accountDeposit < 5000.00){
+      accountDeposit <- readline("Initial Deposit: ")
+
+      if(accountDeposit < 5000.00)
+        cat("\n ! Please Input a Higher Amount !\n")
+    }
     
-    new_Account = data.frame(account_name = accountName, )
+    new_Account <- data.frame(accountName = accountName, accountNumber = as.integer(max(bank_df$account_number) + 1), currentBal = accountDeposit)
     
     cat("***\n","Account created successfully! \n\n",)
     nameExit <- exitFunc()
   }
-  return(accountName)
+  return(new_Account)
 }
 
 deposit <- function(bankList, accountDetails){
@@ -446,7 +453,6 @@ if(file.exists("bank_transactions-1.csv")){
 
   option <- 9
   rateSet <- FALSE
-  registered <- FALSE
   
   while(option != 0){
     
@@ -456,8 +462,7 @@ if(file.exists("bank_transactions-1.csv")){
   
     if(option == 1) {
         cat("***\nSelected Choice =", option,"\n***\n")
-        registerName(newAccount)
-        registered <- TRUE
+        newAccount <- registerName()
         
     } else if(option == 2) {
         cat("***\nSelected Choice =", option,"\n***\n")
