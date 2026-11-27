@@ -80,14 +80,16 @@ registerName <- function(bank_df){
   
   
   while(nameExit != "Y"){
-    accountDeposit <- 0.0
     accountName <- readline("Account Name: ")
-    while(accountDeposit < 5000.00){
-      accountDeposit <- readline("Initial Deposit: ")
+    accountDeposit <- as.numeric(readline("Initial Deposit: "))
 
-      if(accountDeposit < 5000.00)
-        cat("\n ! Please Input a Higher Amount !\n")
+    if (accountDeposit < 5000.00) {
+      cat("\n! Please Input a Higher Amount !\n")
+
+      while (accountDeposit < 5000.00) {
+        accountDeposit <- as.numeric(readline("Initial Deposit: "))
     }
+}
     
     new_Account <- data.frame(accountName = accountName, accountNumber = as.integer(max(bank_df$account_number) + 1), currentBal = accountDeposit)
     
