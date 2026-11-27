@@ -7,8 +7,9 @@
 library(dplyr)
 library(lubridate)
 library(jsonlite)
+library(ggplot2)
 
-bankdf <- read.csv("bank_transactions-1.csv")
+
 
 mainmenu <- c("\nSelect Transaction\n",
               "[1] Register Account Name",
@@ -17,7 +18,7 @@ mainmenu <- c("\nSelect Transaction\n",
               "[4] Currency Exchange",
               "[5] Record Exchange Rates",
               "[6] Show Interest Amount",
-              "[7] Set Rates",
+              "[7] Generate Reports",
               "[0] Exit")
 
 accountDetails <- c("Account Name: ",
@@ -248,12 +249,11 @@ InterestRate <- 0.05
 
 report1 <- function(bank_df){
   
-  modify_df <- df %>% # Gets account age
+  modify_df <- bank_df %>%
     group_by(account_number) %>%
     arrange(date, time, .by_group = FALSE) %>%
     mutate(AccountAge = as.integer(difftime(Sys.Date(),head(date, n=1),"day"))) %>%
     ungroup()
-
   
   report_1 <- modify_df %>%
     
@@ -262,8 +262,11 @@ report1 <- function(bank_df){
            date < floor_date(Sys.Date(), "month")) %>%
     
     group_by(account_number, date) %>%
-    arrange(date, time, .by_group = TRUE) %>%
+    arrange(time, .by_group = TRUE) %>%
+    slice_tail(n = 1) %>%
+    ungroup() %>%
     
+    group_by(account_number) %>%
     mutate(AverageDailyBalance = mean(current_balance),
            PrivelegeTier = case_when(
              AverageDailyBalance < 500000.00 ~ "Silver",
@@ -272,9 +275,8 @@ report1 <- function(bank_df){
            )) %>%
     
     filter(AverageDailyBalance >= 100000) %>%
-    slice_tail(n = 1) %>%
     ungroup() %>%
-    arrange(AverageDailyBalance) %>%
+    arrange(desc(current_balance), .by_group = FALSE) %>%
     select(account_name, AccountAge, current_balance, AverageDailyBalance, PrivelegeTier)
   
   write.csv(report_1, "R_report1_banking_privilege_tiers.csv")
@@ -327,6 +329,52 @@ report3 <- function(bank_df){
   return(report_3)
 }
 
+report_4_deposit <- function(bank_df){
+  
+  modify_df <- bank_df
+  modify_df$transaction_month <- month(modify_df$date, label = TRUE)
+  
+  report_4_Deposit <- modify_df  %>%
+    filter(year(date) == year(Sys.Date())) %>%
+    group_by(transaction_month) %>%
+    
+    summarise(total_deposits = sum(amount[type == "deposit"], na.rm = TRUE)) %>%
+    
+    ggplot(aes(x = transaction_month, y = total_deposits, group = 1)) +
+    geom_line() +
+    geom_point() +
+    labs(Title = "Deposits per Month in the Current Year",
+         x = "Month",
+         y = "Total Deposits") +
+    theme_minimal()
+  
+  return(report_4_Deposit)
+  
+}
+
+report_4_withdraw <- function(bank_df){
+  
+  modify_df <- bank_df
+  modify_df$transaction_month <- month(modify_df$date, label = TRUE)
+  
+  report_4_Withdraw <- modify_df  %>%
+    filter(year(date) == year(Sys.Date())) %>%
+    group_by(transaction_month) %>%
+    
+    summarise(total_withdraws = sum(amount[type == "withdrawal"], na.rm = TRUE)) %>%
+    
+    ggplot(aes(x = transaction_month, y = total_withdraws, group = 1)) +
+    geom_line() +
+    geom_point() +
+    labs(Title = "Withdrawals per Month in the Current Year",
+         x = "Month",
+         y = "Total Withdrawals") +
+    theme_minimal()
+  
+  return(report_4_Withdraw)
+  
+}
+
 summaryReport <- function(bank_df, report2){
   
   summary <- bank_df %>%
@@ -336,7 +384,7 @@ summaryReport <- function(bank_df, report2){
               total_deposits = sum(amount[type == "deposit"]),
               total_withdraws = sum(amount[type == "withdrawal"]))
   
-  write.csv(summary, "summary.csv")
+  write_json(summary, "summary.json")
   
   return(summary)
 }
@@ -348,81 +396,105 @@ printReports <- function(bank_df){
   cat("\n\n Report 1: Suspicious Client Behavior\n")
   report1_table <- report1(bank_df)
   print(report1_table, n=2)
-  cat("\n(Full table exported to R_report1_banking_privilege_tiers.csv)")
+  cat("\n(Full table exported to R_report1_banking_privilege_tiers.csv)\n")
   
   cat("\n\n Report 2: Interest Expense Projection\n")
   report2_table <- report2(bank_df)
   print(report2_table, n=2)
-  cat("\n(Full table exported to R_report2_interest_expense_projection.csv)")
+  cat("\n(Full table exported to R_report2_interest_expense_projection.csv)\n")
   
   cat("\n\n Report 3: Suspicious Client Behavior\n")
   report3_table <- report3(bank_df)
   print(report3_table, n=2)
-  cat("\n(Full table exported to R_report3_suspicious_client_behavior.csv)")
+  cat("\n(Full table exported to R_report3_suspicious_client_behavior.csv)\n")
   
   cat("\n\n Report 4: Monthly Transaction Graph\n")
-  print(report4_table, n=2)
-  cat("\n(Full table exported to R_report3_suspicious_client_behavior.csv)")
+  report4_table1 <- report_4_deposit(bank_df)
+  report4_table2 <- report_4_withdraw(bank_df)
+  print(report4_table1)
+  cat("\n")
+  print(report4_table2)
   
   cat("\n\n Summary State (summary.csv)\n")
   summary_table <- summaryReport(bank_df, report2_table)
   print(summary_table)
+  
+  readline("End of Reports...")
 }
 
 generateReports <- function(bank_df){
   
+  cat("\nGenerate Reports\n",
+      "\n[1] Load the file",
+      "\n[2] Generate Reports\n")
+  option <- readline("Enter choice: ")
   
+  if(option == 1){
+    cat(paste0("\nProcessing dataset... (",nrow(bank_df),
+      " rows loaded, ",nrow(bank_df)," filtered for PHP currency)\n"
+    ))
+  } else if(option == 2){
+      printReports(bank_df)
+  } else
+    cat("\n!Invalid Option!\n")
+    
 }
 
-option <- 9
-rateSet <- FALSE
-registered <- FALSE
+if(file.exists("bank_transactions-1.csv")){
+  bankdf <- read.csv("bank_transactions-1.csv")
+  bankdf <- cleanFile(bankdf)
 
-while(option != 0){
+  option <- 9
+  rateSet <- FALSE
+  registered <- FALSE
   
-cat(writeLines(mainmenu))
-option <- readline("Choice: ")
-option <- as.integer(option)
-
-  if(option == 1) {
-      cat("***\nSelected Choice =", option,"\n***\n")
-      bankList <- registerName(newAccount)
-      registered <- TRUE
+  while(option != 0){
+    
+  cat(writeLines(mainmenu))
+  option <- readline("Choice: ")
+  option <- as.integer(option)
+  
+    if(option == 1) {
+        cat("***\nSelected Choice =", option,"\n***\n")
+        registerName(newAccount)
+        registered <- TRUE
+        
+    } else if(option == 2) {
+        cat("***\nSelected Choice =", option,"\n***\n")
+        deposit(bankList, accountDetails)
+        
+    } else if(option == 3) {
+        cat("***\nSelected Choice =", option,"\n***\n")
+        withdraw(bankList, accountDetails)
+  
+    } else if(option == 4) {
+        cat("***\nSelected Choice =", option,"\n***\n")
       
-  } else if(option == 2) {
-      cat("***\nSelected Choice =", option,"\n***\n")
-      bankList <- deposit(bankList, accountDetails)
+        if(rateSet == TRUE){
+          currencyExchange(rates, rateValues)
+      } else {
+          cat("\n ! Rates not Set !\n")
+          rateValues <- setRates(rates, rateValues)
+          rateSet <- TRUE
+      }
+    } else if(option == 5) {
+        cat("***\nSelected Choice =", option,"\n***\n")
       
-  } else if(option == 3) {
-      cat("***\nSelected Choice =", option,"\n***\n")
-      bankList <- withdraw(bankList, accountDetails)
-
-  } else if(option == 4) {
-      cat("***\nSelected Choice =", option,"\n***\n")
-    
-      if(rateSet == TRUE){
-        currencyExchange(rates, rateValues)
-    } else {
-        cat("\n ! Rates not Set !\n")
-        rateValues <- setRates(rates, rateValues)
-        rateSet <- TRUE
+        if(rateSet == TRUE){
+          recordExchange(rates,rateValues)
+      } else{
+          cat("\n ! Rates not Set !\n")
+          rateValues <- setRates(rates, rateValues)
+          rateSet <- TRUE
+      }
+    } else if(option == 6){
+        cat("***\nSelected Choice =", option,"\n***\n")
+        showInterest(bankdf, accountDetails)
+      
+    } else if(option == 7){
+        cat("***\nSelected Choice =", option,"\n***\n")
+        generateReports(bankdf)
     }
-  } else if(option == 5) {
-      cat("***\nSelected Choice =", option,"\n***\n")
-    
-      if(rateSet == TRUE){
-        recordExchange(rates,rateValues)
-    } else{
-        cat("\n ! Rates not Set !\n")
-        rateValues <- setRates(rates, rateValues)
-        rateSet <- TRUE
-    }
-  } else if(option == 6){
-      cat("***\nSelected Choice =", option,"\n***\n")
-      showInterest(bankList, accountDetails)
-    
-  } else if(option == 7){
-      cat("***\nSelected Choice =", option,"\n***\n")
-      generateReports()
   }
-}
+} else
+  cat("\n!File Cannot be Read!\n")
