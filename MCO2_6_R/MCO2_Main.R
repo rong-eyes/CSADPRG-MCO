@@ -80,7 +80,7 @@ registerName <- function(bank_df){
   
   
   while(nameExit != "Y"){
-    accountName <- readline("Account Name: ")
+    account_Name <- readline("Account Name: ")
     accountDeposit <- as.numeric(readline("Initial Deposit: "))
 
     if (accountDeposit < 5000.00) {
@@ -99,35 +99,81 @@ registerName <- function(bank_df){
   return(new_Account)
 }
 
-deposit <- function(bankList, accountDetails){
-  depositExit <- "N"
-  
-  while(depositExit != "Y"){
-    cat("\nDeposit Amount")
-    user <- accountFind(bankList)
-    
-    if(is.null(user)){
-      cat("\n ! Account not Found !\n")
-    } else {
-    writeLines(paste(accountDetails, bankList[[user]]))
 
-    depositAmt <- readline("\nDeposit Amount: ")
-    depositAmt <- as.numeric(depositAmt)
-    
-    if(depositAmt < 0){
-      cat("\n ! Invalid Deposit amount !\n")
+deposit <- function(bankList, new_account) {
+  depositExit <- "N"
+
+  while (depositExit != "Y") {
+
+    cat("\nDeposit Amount\n")
+    key_user <- readline("Account Name: ")
+    user <- bankList %>%
+      filter(account_name == key_user)
+
+    if (nrow(user) != 0) {
+      user <- user %>%
+        arrange(date, time) %>%
+        tail(n = 1)
+
+      cat(paste0("\nInitial Balance: \n", user$current_balance ))
+
+      depositAmt <- as.numeric(readline("\nDeposit Amount: "))
+
+      if (depositAmt <= 0) {
+        cat("\n! Invalid Deposit Amount !\n")
+
+      } else {
+        updated_balance <- user$current_balance + depositAmt
+        cat("\n***\n")
+        cat(paste0("\nUpdated Balance: \n", updated_balance))
+
+        new_record <- data.frame(
+          account_name = user$account_name,
+          account_number = user$account_number,
+          date = format(Sys.Date()),
+          time = format(Sys.time(), "%H:%M:%S"),
+          currency = "PHP",
+          amount = depositAmt,
+          type = "deposit",
+          current_balance = updated_balance
+        )
+        bankList <- rbind(bankList, new_record)
+      }
+
+    } else if (new_account$accountName == key_user) {
+      cat(paste0("\nInitial Balance: \n", new_account$currentBal))
+      depositAmt <- as.numeric(readline("\nDeposit Amount: "))
+
+      if (depositAmt <= 0) {
+        cat("\n! Invalid Deposit Amount !\n")
+
+      } else {
+        new_account$currentBal <-
+          new_account$currentBal + depositAmt
+
+        cat("\n***\n")
+        cat(paste0("\nUpdated Balance: \n", new_account$currentBal))
+
+        new_record <- data.frame(
+          account_name = new_account$accountName,
+          account_number = new_account$accountNumber,
+          date = format(Sys.Date()),
+          time = format(Sys.time(), "%H:%M:%S"),
+          currency = "PHP",
+          amount = depositAmt,
+          type = "deposit",
+          current_balance = new_account$currentBal
+        )
+        bankList <- rbind(bankList, new_record)
+      }
     } else {
-    cat("\n***\n")
-    bankList[[user]]$balance <- bankList[[user]]$balance + depositAmt
-    writeLines(paste(accountDetails, bankList[[user]]))
+      cat("\n! Account Not Found !\n")
     }
-  }
-    
     depositExit <- exitFunc()
   }
-  
   return(bankList)
 }
+
 
 withdraw <- function(bankList, accountDetails){
   withdrawExit <- "N"
