@@ -5,64 +5,65 @@ Paradigm: Object-Oriented Programming
 ********************/
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
 public class MCO2_6_Java{
+    static final String BACK_PROMPT = "Back to the Main Menu (Y/N): ";
+    static final int INTEREST_RATE_PERCENT = 5;
 
-    static final double ANNUAL_INTEREST = 0.05;
     static Bank bank;
     static Exchange exchange = new Exchange();
     static Path csvPath;
+    static DataSet dataset;
 
     static String money(double v){
         return String.format(Locale.US, "%.2f", v);
+    }
+
+    static boolean backToMenu(){
+        System.out.println();
+        return Input.askYesNo(BACK_PROMPT);
     }
 
     static void registerAccount(){
         do{
             System.out.println("Register Account");
 
-            String name;
-            double initial = Input.readDouble("Initial Deposit: ");
+            String name = Input.readLine("Account Name: ");
 
-            while (true){
+            while (!Bank.isValidName(name)){
+                System.out.println("Invalid name.");
                 name = Input.readLine("Account Name: ");
-
-                if (name.isEmpty()){
-                    System.out.println("Please provide an account name.");
-                }
-                else if (name.split("\\s+").length < 2){
-                    System.out.println("Please enter your first name and last name.");
-                }
-                else if (bank.findByName(name) != null){
-                    System.out.println("Account already exists.");
-                }
-                else{
-                    break;
-                }
             }
 
-            while (initial < Bank.MIN_INITIAL_DEPOSIT){
-                System.out.println("Minimum initial deposit is Php. " + Csv.money(Bank.MIN_INITIAL_DEPOSIT) + ".");
-                initial = Input.readDouble("Initial Deposit: ");
+            if (bank.findByName(name) != null){
+                System.out.println("Account already exists.");
+                continue;
+            }
+
+            BigDecimal initial = Input.parseAmount(Input.readLine("Initial Deposit: "), RoundingMode.DOWN);
+
+            while (initial == null || initial.compareTo(Bank.MIN_INITIAL_DEPOSIT) < 0){
+                System.out.println("Minimum initial deposit is " + Bank.MIN_INITIAL_DEPOSIT + ".");
+                initial = Input.parseAmount(Input.readLine("Initial Deposit: "), RoundingMode.DOWN);
             }
 
             Account account = bank.register(name, initial);
 
-            System.out.println("\n***");
+            System.out.println("Account created successfully!");
             System.out.println("Account Name: " + account.name);
             System.out.println("Account Number: " + account.number);
             System.out.println("Currency: " + account.currency);
             System.out.println("Balance: " + money(account.balance));
-            System.out.println("Account created successfully!");
-            System.out.println("\n***");
-        }
-        while (Input.askYesNo("Register another account? (Y/N): "));
+        } while (!backToMenu());
     }
 
     static void depositAmount(){
@@ -71,24 +72,25 @@ public class MCO2_6_Java{
             Account account = bank.findByName(Input.readLine("Account Name: "));
 
             if (account == null){
-                System.out.println("Account not found.");
-            }
-            else{
-                System.out.println("Current Balance: " + money(account.balance));
-                System.out.println("Currency: " + account.currency);
-
-                double amount = Input.readPositive("Deposit Amount: ");
-                bank.deposit(account, amount);
-
-                System.out.println("\n***");
-                System.out.println("Account Name: " + account.name);
-                System.out.println("Deposit Amount: " + money(amount));
-                System.out.println("Updated Balance: " + money(account.balance));
+                System.out.println("Account does not exist.");
+                continue;
             }
 
-            System.out.println("\n***");
-        }
-        while (Input.askYesNo("Deposit another amount? (Y/N): "));
+            System.out.println("Current Balance: " + money(account.balance));
+            System.out.println("Currency: " + account.currency);
+            System.out.println();
+
+            BigDecimal amount = Input.parseAmount(Input.readLine("Deposit Amount: "), RoundingMode.DOWN);
+
+            while (amount == null || amount.signum() <= 0){
+                System.out.println("Invalid amount. Try again!");
+                System.out.println();
+                amount = Input.parseAmount(Input.readLine("Deposit Amount: "), RoundingMode.DOWN);
+            }
+
+            bank.deposit(account, amount);
+            System.out.println("Updated Balance: " + money(account.balance));
+        } while (!backToMenu());
     }
 
     static void withdrawAmount(){
@@ -97,29 +99,36 @@ public class MCO2_6_Java{
             Account account = bank.findByName(Input.readLine("Account Name: "));
 
             if (account == null){
-                System.out.println("Account not found.");
+                System.out.println("Account does not exist.");
+                continue;
             }
-            else{
-                System.out.println("Current Balance: " + money(account.balance));
-                System.out.println("Currency: " + account.currency);
 
-                double amount = Input.readPositive("Withdraw Amount: ");
+            System.out.println("Current Balance: " + money(account.balance));
+            System.out.println("Currency: " + account.currency);
+            System.out.println();
 
-                System.out.println("\n***");
+            if (BigDecimal.valueOf(account.balance).signum() <= 0){
+                System.out.println("Account is empty.");
+                continue;
+            }
 
-                if (bank.withdraw(account, amount)){
-                    System.out.println("Account Name: " + account.name);
-                    System.out.println("Withdraw Amount: " + money(amount));
-                    System.out.println("Updated Balance: " + money(account.balance));
+            while (true){
+                BigDecimal amount = Input.parseAmount(Input.readLine("Withdraw Amount: "), RoundingMode.UP);
+
+                if (amount == null || amount.signum() <= 0){
+                    System.out.println("Invalid amount.");
+                }
+                else if (!bank.withdraw(account, amount)){
+                    System.out.println("Insufficient funds.");
                 }
                 else{
-                    System.out.println("Insufficient balance.");
+                    System.out.println("Updated Balance: " + money(account.balance));
+                    break;
                 }
-            }
 
-            System.out.println("\n***");
-        }
-        while (Input.askYesNo("Withdraw another amount? (Y/N): "));
+                System.out.println();
+            }
+        } while (!backToMenu());
     }
 
     static void currencyExchange(){
@@ -157,8 +166,7 @@ public class MCO2_6_Java{
             }
 
             System.out.println("\n***");
-        }
-        while (Input.askYesNo("Convert another currency? (Y/N): "));
+        } while (Input.askYesNo("Convert another currency? (Y/N): "));
     }
 
     static void recordExchangeRates(){
@@ -172,7 +180,7 @@ public class MCO2_6_Java{
             System.out.println("\n***");
 
             if (choice == 1){
-                System.out.println("PHP is the base currency; its exchange rate is fixed at 1.00.");
+                System.out.println("The base currency is PHP. Exchange rate = 1.00");
             }
             else{
                 currency.rate = Input.readPositive("Exchange Rate: ");
@@ -181,94 +189,109 @@ public class MCO2_6_Java{
                 System.out.println("Select Foreign Currency = " + currency.name);
                 System.out.println("Exchange Rate = " + money(currency.rate));
             }
-
-            System.out.println("\n***");
-        }
-        while (!Input.askYesNo("Return to main menu? (Y/N): "));
+        } while (!backToMenu());
     }
 
     static void showInterest(){
         do{
-            System.out.println("Show Interest\n");
+            System.out.println("Show Interest Amount");
             Account account = bank.findByName(Input.readLine("Account Name: "));
 
             if (account == null){
-                System.out.println("Account not found.");
+                System.out.println("Account does not exist.");
+                continue;
             }
-            else{
-                int days = (int) Input.readPositive("Total number of days: ");
-                double balance = account.balance;
 
-                System.out.println("\n***");
-                System.out.println("Account Name: " + account.name);
-                System.out.println("Currency: " + account.currency);
-                System.out.println("Current Account Balance: " + money(account.balance));
-                System.out.println("Annual Interest Rate: 5%");
-                System.out.println("\nExpected Daily Interest:");
-                System.out.printf("%-10s | %-20s | %-20s%n", "Day", "Interest", "Balance");
+            System.out.println("Current Balance: " + money(account.balance));
+            System.out.println("Currency: " + account.currency);
+            System.out.println("Interest Rate: " + INTEREST_RATE_PERCENT + "%");
+            System.out.println();
 
-                for (int day = 1; day <= days; day++){
-                    double daily = balance * (ANNUAL_INTEREST / 365);
-                    balance += daily;
+            int days = readDays();
 
-                    System.out.printf(Locale.US, "%-10d | %-20.2f | %-20.2f%n", day, daily, balance);
+            System.out.println();
+            System.out.printf("%-4s | %-8s | %-13s |%n", "Day", "Interest", "Balance");
+
+            BigDecimal balance = BigDecimal.valueOf(account.balance);
+
+            for (int day = 1; day <= days; day++){
+                BigDecimal interest = Interest.daily(balance);
+                balance = balance.add(interest);
+
+                System.out.printf("%-4d | %-8s | %-13s |%n", day, interest.toPlainString(), balance.toPlainString());
+            }
+        } while (!backToMenu());
+    }
+
+    static int readDays(){
+        while (true){
+            try{
+                int days = Integer.parseInt(Input.readLine("Total Number of Days: "));
+
+                if (days > 0){
+                    return days;
                 }
             }
+            catch (NumberFormatException e){
+            }
 
-            System.out.println("\n***");
+            System.out.println("Invalid days.");
+            System.out.println();
         }
-        while (!Input.askYesNo("Return to main menu? (Y/N): "));
     }
 
     static void generateReports(){
-        DataSet dataset = null;
-        boolean running = true;
+        do{
+            System.out.println("Generate Reports\n");
+            System.out.println("[1] Load the file\n[2] Generate Reports\n");
 
-        while (running){
-            System.out.println("Generate Reports");
-            System.out.println("[1] Load the file\n[2] Generate Reports\n[0] Back to main menu");
-            int choice = Input.readChoice("Enter choice: ", 0, 2);
+            int choice = readReportsChoice();
 
-            switch (choice){
-                case 1:
-                    try{
-                        System.out.println("Processing dataset...");
-                        dataset = DataLoader.load(csvPath);
+            if (choice == 1){
+                loadFile();
+            }
+            else if (dataset == null){
+                System.out.println("No transactions loaded.");
+            }
+            else if (dataset.transactions.isEmpty()){
+                System.out.println("No transactions to report.");
+            }
+            else{
+                writeReports(new ReportGenerator(dataset.transactions));
+            }
+        } while (!backToMenu());
+    }
 
-                        System.out.printf(Locale.US, "(%,d rows loaded, %,d filtered for PHP currency)%n",
-                                dataset.rowsRead, dataset.transactions.size());
-                        System.out.printf(Locale.US, "Validation: %,d non-PHP rows excluded, %,d rows with errors dropped, %,d missing balances imputed%n",
-                                dataset.nonPhpRows, dataset.errors.size(), dataset.imputedBalances);
+    static int readReportsChoice(){
+        while (true){
+            String answer = Input.readLine("Enter choice: ");
 
-                        for (int i = 0; i < Math.min(5, dataset.errors.size()); i++){
-                            System.out.println("  " + dataset.errors.get(i));
-                        }
-                        if (dataset.errors.size() > 5){
-                            System.out.println("  ... and " + (dataset.errors.size() - 5) + " more");
-                        }
-                    }
-                    catch (IOException e){
-                        System.out.println("Could not read " + csvPath + ": " + e.getMessage());
-                    }
-                    break;
-
-                case 2:
-                    if (dataset == null){
-                        System.out.println("Please load the file first.");
-                    }
-                    else if (dataset.transactions.isEmpty()){
-                        System.out.println("No usable PHP transactions were found.");
-                    }
-                    else{
-                        writeReports(new ReportGenerator(dataset.transactions));
-                    }
-                    break;
-
-                default:
-                    running = false;
+            if (answer.equals("1") || answer.equals("2")){
+                return Integer.parseInt(answer);
             }
 
+            System.out.println("Invalid input.");
             System.out.println();
+        }
+    }
+
+    static void loadFile(){
+        try{
+            dataset = DataLoader.load(csvPath);
+
+            System.out.printf(Locale.US, "(%,d rows loaded, %,d filtered for PHP, %,d invalid rows skipped)%n",
+                    dataset.rowsRead, dataset.transactions.size(), dataset.errors.size());
+
+            for (int i = 0; i < Math.min(5, dataset.errors.size()); i++){
+                System.out.println("  " + dataset.errors.get(i));
+            }
+            if (dataset.errors.size() > 5){
+                System.out.println("  ... and " + (dataset.errors.size() - 5) + " more");
+            }
+        }
+        catch (IOException e){
+            dataset = null;
+            System.out.println("Could not open " + csvPath.getFileName() + ". Ensure that the file is in the same folder as the program.");
         }
     }
 
@@ -279,7 +302,7 @@ public class MCO2_6_Java{
         Path outDir = Paths.get(".");
 
         try{
-            System.out.println("Outputs saved to individual files...\n");
+            System.out.println("Outputs saved\n");
 
             for (Table t : tables){
                 t.write(outDir);
@@ -292,11 +315,11 @@ public class MCO2_6_Java{
             String json = gen.summaryJson();
             Files.writeString(outDir.resolve("summary.json"), json, StandardCharsets.UTF_8);
 
-            System.out.println("Summary State (summary.json):");
+            System.out.println("summary.json:");
             System.out.print(json);
         }
         catch (IOException e){
-            System.out.println("Could not write report files: " + e.getMessage());
+            System.out.println("Could not write report: " + e.getMessage());
         }
     }
 
@@ -312,32 +335,45 @@ public class MCO2_6_Java{
             return;
         }
 
-        boolean runMenu = true;
+        try{
+            runMenu();
+        }
+        catch (NoSuchElementException e){
+            System.out.println();
+            System.out.println("Exiting.");
+        }
 
-        while (runMenu){
+        Input.close();
+    }
+
+    static void runMenu(){
+        boolean running = true;
+
+        while (running){
             System.out.println("Select Transaction:\n");
             System.out.println("[1] Register Account\n[2] Deposit Amount\n[3] Withdraw Amount");
             System.out.println("[4] Currency Exchange\n[5] Record Exchange Rates\n[6] Show Interest Amount");
             System.out.println("[7] Generate Reports\n[0] Exit\n");
 
-            int choice = Input.readInt("Choice: ");
+            String answer = Input.readLine("Choice: ");
+            System.out.println();
 
-            System.out.println("*** \nChoice: " + choice + "\n");
-
-            switch (choice){
-                case 1: registerAccount(); break;
-                case 2: depositAmount(); break;
-                case 3: withdrawAmount(); break;
-                case 4: currencyExchange(); break;
-                case 5: recordExchangeRates(); break;
-                case 6: showInterest(); break;
-                case 7: generateReports(); break;
-                case 0: runMenu = false; break;
-                default: System.out.println("Please choose a valid option.");
+            switch (answer){
+                case "1": registerAccount(); break;
+                case "2": depositAmount(); break;
+                case "3": withdrawAmount(); break;
+                case "4": currencyExchange(); break;
+                case "5": recordExchangeRates(); break;
+                case "6": showInterest(); break;
+                case "7": generateReports(); break;
+                case "0":
+                    System.out.println("Exiting.");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid option.");
+                    System.out.println();
             }
         }
-
-        Input.close();
     }
 }
-

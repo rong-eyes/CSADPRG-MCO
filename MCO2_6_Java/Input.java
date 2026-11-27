@@ -4,9 +4,10 @@ Language: Java
 Paradigm: Object-Oriented Programming
 ********************/
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Scanner;
 
-/* input helper */
 public class Input{
     private static final Scanner sc = new Scanner(System.in);
 
@@ -23,7 +24,7 @@ public class Input{
                 return Integer.parseInt(readLine(prompt));
             }
             catch (NumberFormatException e){
-                System.out.println("Please enter a whole number.");
+                System.out.println("Please enter a whole integer number.");
             }
         }
     }
@@ -49,7 +50,6 @@ public class Input{
                 }
             }
             catch (NumberFormatException e){
-                // fall through to the message below
             }
 
             System.out.println("Please enter a valid number.");
@@ -60,11 +60,20 @@ public class Input{
         double v = readDouble(prompt);
 
         while (v <= 0){
-            System.out.println("Please enter an amount greater than 0.");
+            System.out.println("Please enter a non-zero amount.");
             v = readDouble(prompt);
         }
 
         return v;
+    }
+
+    public static BigDecimal parseAmount(String text, RoundingMode mode){
+        try{
+            return new BigDecimal(text.trim()).setScale(2, mode);
+        }
+        catch (NumberFormatException e){
+            return null;
+        }
     }
 
     public static boolean askYesNo(String prompt){

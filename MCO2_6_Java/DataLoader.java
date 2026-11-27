@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataLoader{
-    // date mont year accepts both 01/12/2025 and 1/2/2025
+
     static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("d/M/uuuu").withResolverStyle(ResolverStyle.STRICT);
     static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("H:mm:ss").withResolverStyle(ResolverStyle.STRICT);
 
@@ -32,11 +32,8 @@ public class DataLoader{
         for (int i = 0; i < lines.size(); i++){
             String line = lines.get(i);
 
-            if (i == 0 && line.startsWith("﻿")){
+            if (i == 0 && line.startsWith("\uFEFF")){
                 line = line.substring(1);
-            }
-            if (line.isBlank()){
-                continue;
             }
             if (i == 0 && line.toLowerCase().startsWith("account_name")){
                 continue;
@@ -78,6 +75,9 @@ public class DataLoader{
     }
 
     private static Transaction parseRow(List<String> f){
+        if (f.size() == 1 && f.get(0).isBlank()){
+            throw new IllegalArgumentException("blank line");
+        }
         if (f.size() != 8){
             throw new IllegalArgumentException("expected 8 columns but found " + f.size());
         }
@@ -94,6 +94,13 @@ public class DataLoader{
         if (name.isEmpty() || number.isEmpty() || date.isEmpty() || time.isEmpty()
                 || currency.isEmpty() || amount.isEmpty() || type.isEmpty()){
             throw new IllegalArgumentException("missing value");
+        }
+
+        if (!number.matches("\\d{1,18}")){
+            throw new IllegalArgumentException("invalid account number '" + number + "'");
+        }
+        if (!currency.matches("[A-Z]{3}")){
+            throw new IllegalArgumentException("invalid currency '" + currency + "'");
         }
 
         LocalDate d = LocalDate.parse(date, DATE_FMT);
@@ -117,7 +124,7 @@ public class DataLoader{
         if (!balance.isEmpty()){
             bal = Double.parseDouble(balance.replace(",", ""));
 
-            if (!Double.isFinite(bal)){
+            if (!Double.isFinite(bal) || bal < 0){
                 throw new IllegalArgumentException("invalid balance '" + balance + "'");
             }
         }

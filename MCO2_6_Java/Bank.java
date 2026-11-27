@@ -7,6 +7,7 @@ Paradigm: Object-Oriented Programming
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.UncheckedIOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +20,7 @@ import java.util.TreeMap;
 
 public class Bank{
     static final String HEADER = "account_name,account_number,date,time,currency,amount,type,current_balance";
-    static final double MIN_INITIAL_DEPOSIT = 5000.00;
+    static final BigDecimal MIN_INITIAL_DEPOSIT = new BigDecimal("5000.00");
     static final long FIRST_ACCOUNT_NUMBER = 1092000001L;
 
     private static final DateTimeFormatter OUT_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -46,11 +47,15 @@ public class Bank{
 
     Account findByName(String name){
         for (Account a : accounts.values()){
-            if (a.name.equalsIgnoreCase(name.trim())){
+            if (a.name.equals(name.trim())){
                 return a;
             }
         }
         return null;
+    }
+
+    static boolean isValidName(String name){
+        return !name.isEmpty() && name.length() <= 100 && !name.contains(",");
     }
 
     private String nextAccountNumber(){
@@ -63,29 +68,34 @@ public class Bank{
         return String.valueOf(highest + 1);
     }
 
-    Account register(String name, double initialDeposit){
+    // register
+    Account register(String name, BigDecimal initialDeposit){
         Account a = new Account(nextAccountNumber(), name, 0);
         accounts.put(a.number, a);
         deposit(a, initialDeposit);
         return a;
     }
 
-    void deposit(Account a, double amount){
-        a.balance = Csv.round2(a.balance + amount);
+    void deposit(Account a, BigDecimal amount){
+        a.balance = BigDecimal.valueOf(a.balance).add(amount).doubleValue();
         save(a, "deposit", amount);
     }
 
-    boolean withdraw(Account a, double amount){
-        if (amount > a.balance){
+    // false when insufficient funds
+    boolean withdraw(Account a, BigDecimal amount){
+        BigDecimal balance = BigDecimal.valueOf(a.balance);
+
+        if (amount.compareTo(balance) > 0){
             return false;
         }
 
-        a.balance = Csv.round2(a.balance - amount);
+        a.balance = balance.subtract(amount).doubleValue();
         save(a, "withdrawal", amount);
         return true;
     }
-    
-    private void save(Account a, String type, double amount){
+
+    // save transaction to csv
+    private void save(Account a, String type, BigDecimal amount){
         LocalDateTime now = LocalDateTime.now();
 
         String row = String.join(",",
@@ -94,7 +104,7 @@ public class Bank{
                 OUT_DATE.format(now),
                 OUT_TIME.format(now),
                 a.currency,
-                String.format(Locale.US, "%.2f", amount),
+                amount.toPlainString(),
                 type,
                 String.format(Locale.US, "%.2f", a.balance));
 

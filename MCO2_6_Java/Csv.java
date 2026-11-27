@@ -4,6 +4,7 @@ Language: Java
 Paradigm: Object-Oriented Programming
 ********************/
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +59,10 @@ public final class Csv{
 
     static String money(double v){
         return String.format(Locale.US, "%,.2f", v);
+    }
+
+    static String quotedMoney(BigDecimal v){
+        return "\"" + String.format(Locale.US, "%,.2f", v) + "\"";
     }
 
     static double round2(double v){

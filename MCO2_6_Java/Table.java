@@ -9,8 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
 
 
 public class Table{
@@ -30,7 +30,7 @@ public class Table{
         lines.add(String.join(",", header));
 
         for (String[] r : rows){
-            lines.add(Arrays.stream(r).map(Csv::field).reduce((a, b) -> a + "," + b).orElse(""));
+            lines.add(String.join(",", r));
         }
 
         Files.write(dir.resolve(fileName), lines, StandardCharsets.UTF_8);
@@ -40,7 +40,7 @@ public class Table{
         System.out.println(String.join(" | ", header));
 
         for (int i = 0; i < Math.min(n, rows.size()); i++){
-            System.out.println(String.join(" | ", rows.get(i)));
+            System.out.println(String.join(" | ", rows.get(i)).replace("\"", ""));
         }
 
         System.out.println("(" + rows.size() + " rows in total)");
